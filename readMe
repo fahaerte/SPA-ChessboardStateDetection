@@ -1,0 +1,12 @@
+Start service ChessboardStateDetectionWithKMeans:
+uvicorn ChessboardDetectionController:app --host ::1 --port 1122 --reload
+
+The following endpoint are provided:
+- GET request to /chessboardstate/?url=
+    With the url of an image
+
+- GET request to /current/chessboardstate
+    For the current state of the chessboard
+
+ Returns:
+ JSON containing a 2D array of the chessboardstate. 'e' means an empty field, 'r'/'b' means that the field is occupied with a red or blue figure.

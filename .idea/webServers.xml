@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="bb85cb09-dbde-4a49-9d15-600021e8cbc1" name="Lehre">
+        <fileTransfer accessType="SFTP" host="lehre.bpm.in.tum.de" port="22" sshConfigId="e93afdc7-5212-4cb9-a45f-6e254dbca5c1" sshConfig="ge32wob@lehre.bpm.in.tum.de:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

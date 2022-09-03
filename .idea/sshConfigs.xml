@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="lehre.bpm.in.tum.de" id="e93afdc7-5212-4cb9-a45f-6e254dbca5c1" keyPath="C:\Users\haert\Documents\Uni\Master\Sem 02\Sustainable Process Automation\privateKey.ppk" port="22" nameFormat="DESCRIPTIVE" username="ge32wob" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>
