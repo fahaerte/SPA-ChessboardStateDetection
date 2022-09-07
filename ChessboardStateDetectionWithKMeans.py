@@ -76,8 +76,8 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
     labels_reshaped = labels_reshaped[frame_size: size_with_frame-frame_size, frame_size: size_with_frame-frame_size]
     result = []
     color_value_pairs = identify_order_of_colors(centers)
-    print("(i, j) | x:x,  y:y  |  white, black, blue, red")
-    print("----------------------------------------")
+    # print("(i, j) | x:x,  y:y  |  white, black, blue, red")
+    # print("----------------------------------------")
     for i in range(0, 8):
         for j in range(0, 8):
             # Ignore the surrounding 9 pixels: Cut 20x20 tiles
@@ -90,8 +90,8 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
             label_counts = get_amout_of_color_pixels_in_tile(tile, tile_width, color_value_pairs) # order:  white, black, blue, red
             color_in_tile = decide_color_of_tile(label_counts)
 
-            print("(" + str(i) + ", " + str(j) + ") | " + str(x_start) + ":" + str(x_end) + ", " + str(
-                y_start) + ":" + str(y_end) + " | " + '  '.join(str(e) for e in label_counts) + " | " + color_in_tile)
+            # print("(" + str(i) + ", " + str(j) + ") | " + str(x_start) + ":" + str(x_end) + ", " + str(
+            #     y_start) + ":" + str(y_end) + " | " + '  '.join(str(e) for e in label_counts) + " | " + color_in_tile)
 
             result.append(color_in_tile)
             # show_tile(tile, centers)
