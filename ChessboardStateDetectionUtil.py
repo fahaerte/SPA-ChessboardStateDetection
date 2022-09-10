@@ -30,27 +30,6 @@ def crop_image(image, x, y, h, w):
     return image
 
 
-def blur_image(image, blur_size):
-    image = cv2.blur(image, (blur_size, blur_size))
-    return image
-
-
-def get_coordinates_of_occupied_squares(occupied_squares):
-    cood_occcupied_squares = []
-    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-    for i in range(0, len(occupied_squares)):
-        for j in range(0, len(occupied_squares[i])):
-            if occupied_squares[i][j]:
-                coordinate = f'{letters[j]}{(8 - i)}'
-                cood_occcupied_squares.append(coordinate)
-    return cood_occcupied_squares
-
-
-def convert_to_json(occupied_squares, coordinates):
-    boardstate = {'occupiedSquares': occupied_squares.tolist(), 'coordinates': coordinates}
-    return boardstate
-
-
 def show_tile(tile, colors):
     tile = tile.flatten()
     img = colors[tile]

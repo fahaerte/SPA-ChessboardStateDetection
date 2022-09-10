@@ -1,5 +1,9 @@
 from ChessboardStateDetectionUtil import *
 
+RED_ENCODED = 1
+BLUE_ENCODED = -1
+EMPTY_ENCODED = 0
+DEBUG = False
 
 def identify_order_of_colors(centers):
 
@@ -24,7 +28,7 @@ def identify_order_of_colors(centers):
     return color_value_pairs
 
 
-def get_amout_of_color_pixels_in_tile(tile, wh_t, color_value_pairs):
+def get_amount_of_color_pixels_in_tile(tile, wh_t, color_value_pairs):
     amount_blue = count_color_pixels(tile, wh_t, color_value_pairs['blue'])
     amount_red = count_color_pixels(tile, wh_t, color_value_pairs['red'])
     amount_white = count_color_pixels(tile, wh_t, color_value_pairs['white'])
@@ -43,13 +47,14 @@ def count_color_pixels(tile, wh_t, color_value):
         return np.count_nonzero(tile == color_value)
 
 
-def decide_color_of_tile(color_pixel_counts): # order:  white, black, blue, red
+def decide_color_of_tile(color_pixel_counts):
+    # order:  white, black, blue, red
     if color_pixel_counts[3] >= 5:
-        return 'r'
+        return RED_ENCODED
     elif color_pixel_counts[2] > 50:
-        return 'b'
+        return BLUE_ENCODED
     else:
-        return 'e'
+        return EMPTY_ENCODED
 
 
 def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
@@ -65,19 +70,19 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
     image_pixels = image.reshape((-1, 3))  # reshape the image to a 2D array of pixels and 3 color values (RGB)
     image_pixels = np.float32(image_pixels)  # convert to float
 
-    # Apply kmeans
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
     k = 4
     _, labels, centers = cv2.kmeans(image_pixels, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
 
-    # convert back to 8 bit values
     centers = np.uint8(centers)
     labels_reshaped = np.reshape(labels, (size_with_frame, size_with_frame))
     labels_reshaped = labels_reshaped[frame_size: size_with_frame-frame_size, frame_size: size_with_frame-frame_size]
     result = []
     color_value_pairs = identify_order_of_colors(centers)
-    # print("(i, j) | x:x,  y:y  |  white, black, blue, red")
-    # print("----------------------------------------")
+    if DEBUG:
+        print("(i, j) | x:x,  y:y  |  white, black, blue, red")
+        print("----------------------------------------")
+
     for i in range(0, 8):
         for j in range(0, 8):
             # Ignore the surrounding 9 pixels: Cut 20x20 tiles
@@ -87,15 +92,17 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
             y_end = (j + 1) * tile_size - 4
             tile_width = x_end - x_start
             tile = labels_reshaped[x_start: x_end, y_start: y_end]
-            label_counts = get_amout_of_color_pixels_in_tile(tile, tile_width, color_value_pairs) # order:  white, black, blue, red
+            label_counts = get_amount_of_color_pixels_in_tile(tile, tile_width, color_value_pairs)
             color_in_tile = decide_color_of_tile(label_counts)
 
-            # print("(" + str(i) + ", " + str(j) + ") | " + str(x_start) + ":" + str(x_end) + ", " + str(
-            #     y_start) + ":" + str(y_end) + " | " + '  '.join(str(e) for e in label_counts) + " | " + color_in_tile)
+            if DEBUG:
+                print("(" + str(i) + ", " + str(j) + ") | " + str(x_start) + ":" + str(x_end) + ", " + str(
+                    y_start) + ":" + str(y_end) + " | " + '  '.join(str(e) for e in label_counts) + " | " + color_in_tile)
 
             result.append(color_in_tile)
-            # show_tile(tile, centers)
 
-    # show_image(labels_reshaped, centers)
+    if DEBUG:
+        show_image(labels_reshaped, centers)
+
     result = np.reshape(result, (8, 8))
     return {'chessboardstate': result.tolist()}
