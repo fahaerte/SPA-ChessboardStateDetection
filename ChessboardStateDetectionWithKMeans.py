@@ -3,10 +3,10 @@ from ChessboardStateDetectionUtil import *
 RED_ENCODED = 1
 BLUE_ENCODED = -1
 EMPTY_ENCODED = 0
-DEBUG = False
+DEBUG = True
+
 
 def identify_order_of_colors(centers):
-
     for i in range(0, len(centers)):
         if centers[i][0] > 100 and centers[i][1] > 100 and centers[i][2] > 100:
             index_white = i
@@ -61,7 +61,6 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
     frame_width = 8
     frame_size = 4 * frame_width
     size_with_frame = 232 + 2 * frame_size
-    tile_size = 232 // 8
 
     image = load_and_convert_image(url)
     image = crop_image(image, y=2, x=100, h=232, w=232)
@@ -76,12 +75,17 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
 
     centers = np.uint8(centers)
     labels_reshaped = np.reshape(labels, (size_with_frame, size_with_frame))
-    labels_reshaped = labels_reshaped[frame_size: size_with_frame-frame_size, frame_size: size_with_frame-frame_size]
+    labels_reshaped = labels_reshaped[frame_size: size_with_frame - frame_size,
+                      frame_size: size_with_frame - frame_size]
     result = []
+
     color_value_pairs = identify_order_of_colors(centers)
+
     if DEBUG:
         print("(i, j) | x:x,  y:y  |  white, black, blue, red")
         print("----------------------------------------")
+
+    tile_size = 232 // 8
 
     for i in range(0, 8):
         for j in range(0, 8):
@@ -97,7 +101,8 @@ def calculate_chessboard_state(url='https://lab.bpm.in.tum.de/img/low'):
 
             if DEBUG:
                 print("(" + str(i) + ", " + str(j) + ") | " + str(x_start) + ":" + str(x_end) + ", " + str(
-                    y_start) + ":" + str(y_end) + " | " + '  '.join(str(e) for e in label_counts) + " | " + color_in_tile)
+                    y_start) + ":" + str(y_end) + " | " + '  '.join(str(e) for e in label_counts) + " | " + str(
+                    color_in_tile))
 
             result.append(color_in_tile)
 
